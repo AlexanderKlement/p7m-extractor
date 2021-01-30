@@ -2,6 +2,8 @@
 
 A simple class that allows to extract the original file from a signed p7m file.
 
+Added a secondary function in case the original function fails. 
+
 ## Requirements
 
 - PHP 7.0+
@@ -22,7 +24,7 @@ If it is installed it will return the path to the binary.
 You can install the package via composer:
 
 ```bash
-composer require filippo-toso/p7m-extractor
+composer klement-alexander/p7m-extractor
 ```
 
 ## Usage
