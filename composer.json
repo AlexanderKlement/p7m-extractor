@@ -1,11 +1,15 @@
 {
-    "name": "filippo-toso/p7m-extractor",
-    "description": "A simple class that allows to extract the original file from a signed p7m file.",
+    "name": "klement-alexander/p7m-extractor",
+    "description": "A simple class that allows to extract the original file from a signed p7m file.  All Credits  to Filippo Toso. I only made 1 small change",
     "license": "MIT",
     "authors": [
         {
             "name": "Filippo Toso",
             "email": "filippo.toso@creativepark.it"
+        },
+        {
+            "name": "Alexander Klement",
+            "email": "alexander.klement@gmail.com"
         }
     ],
     "require": {
