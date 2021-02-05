@@ -37,7 +37,7 @@ class P7M
         {
             $processNew = $this->getProcessNew();
             $processNew->run();
-            if(!$process->isSuccessful())
+            if(!$processNew->isSuccessful())
             {
                 throw new CouldNotExtractFile($process);
             }
