@@ -39,7 +39,7 @@ class P7M
             $processNew->run();
             if(!$processNew->isSuccessful())
             {
-                throw new CouldNotExtractFile($process);
+                throw new CouldNotExtractFile($processNew);
             }
         }
         return TRUE;
