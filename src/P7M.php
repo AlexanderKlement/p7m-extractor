@@ -35,15 +35,23 @@ class P7M
         $process->run();
         if(!$process->isSuccessful())
         {
-            $process2 = $this->getProcess2();
-            $process2->run();
-            if(!$process2->isSuccessful())
+            $newCMSProcess = $this->getProcessCMS();
+            $newCMSProcess->run();
+            if(!$newCMSProcess->isSuccessful())
             {
-                $process3 = $this->getProcess3();
-                $process3->run();
-                if(!$process3->isSuccessful())
+                $sedProcess = $this->getProcessSED();
+                $sedProcess->mustRun();
+
+                $base64Process = $this->getProcessBASE64();
+                $base64Process->setInput($sedProcess->getOutput());
+                $base64Process->run(); //This should only fail if the output is not base64 and nevertheless return the right output
+
+                $opensslProcess = $this->getProcessOPENSSL_INPUT();
+                $opensslProcess->setInput($base64Process->getOutput());
+                $opensslProcess->run();
+                if(!$opensslProcess->isSuccessful())
                 {
-                    throw new CouldNotExtractFile($process3);
+                    throw new CouldNotExtractFile($opensslProcess);
                 }
             }
         }
@@ -75,15 +83,26 @@ class P7M
     /**
      * Added this function to enable extracting some p7m files i was not able otherwise
      */
-    protected function getProcess2()
+    protected function getProcessCMS()
     {
         $options = [ $this->binPath, 'cms', '-verify', '-noverify', '-in', $this->source, '-inform', 'DER', '-out', $this->destination, '-no_attr_verify' ];
         return new Process($options);
     }
 
-    protected function getProcess3()
+    protected function getProcessSED()
     {
-        $options = [ 'sed', '-e', 's/\r//', '<', $this->source, '|', 'base64', '-d', '|', $this->binPath, 'smime', '-verify', '-inform', 'DER', '-noverify', '-out', $this->destination ];
+        $options = ['sed', '-e', 's/\r//', $this->source];
+        return new Process($options);
+    }
+
+    protected function getProcessBASE64()
+    {
+        $options = ['base64', '-d'];
+        return new Process($options);
+    }
+
+    protected function getProcessOPENSSL_INPUT(){
+        $options = [$this->binPath, 'smime', '-verify', '-inform', 'DER', '-noverify', '-out', $this->destination ];
         return new Process($options);
     }
 
