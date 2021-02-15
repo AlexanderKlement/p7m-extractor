@@ -35,11 +35,15 @@ class P7M
         $process->run();
         if(!$process->isSuccessful())
         {
-            $processNew = $this->getProcessNew();
-            $processNew->run();
-            if(!$processNew->isSuccessful())
-            {
-                throw new CouldNotExtractFile($processNew);
+            $process2 = $this->getProcess2();
+            $process2->run();
+            if(!$process2->isSuccessful()){
+                $process3 = $this->getProcess3();
+                $process3->run();
+                if(!$process3->isSuccessful())
+                {
+                    throw new CouldNotExtractFile($process3);
+                }
             }
         }
         return TRUE;
@@ -70,9 +74,14 @@ class P7M
     /**
      * Added this function to enable extracting some p7m files i was not able otherwise
      */
-    protected function getProcessNew()
+    protected function getProcess2()
     {
         $options = [ $this->binPath, 'cms', '-verify', '-noverify', '-in', $this->source, '-inform', 'DER', '-out', $this->destination, '-no_attr_verify' ];
+        return new Process($options);
+    }
+
+    protected function getProcess3(){
+        $options =  ['sed', '-e', 's/\r//', '<', $this->source, '|', 'base64', '-d', '|', $this->binPath,  'smime',  '-verify', '-inform', 'DER', '-noverify', '-out', $this->destination];
         return new Process($options);
     }
 
