@@ -37,7 +37,8 @@ class P7M
         {
             $process2 = $this->getProcess2();
             $process2->run();
-            if(!$process2->isSuccessful()){
+            if(!$process2->isSuccessful())
+            {
                 $process3 = $this->getProcess3();
                 $process3->run();
                 if(!$process3->isSuccessful())
@@ -80,8 +81,9 @@ class P7M
         return new Process($options);
     }
 
-    protected function getProcess3(){
-        $options =  ['sed', '-e', 's/\r//', '<', $this->source, '|', 'base64', '-d', '|', $this->binPath,  'smime',  '-verify', '-inform', 'DER', '-noverify', '-out', $this->destination];
+    protected function getProcess3()
+    {
+        $options = [ 'sed', '-e', 's/\r//', '<', $this->source, '|', 'base64', '-d', '|', $this->binPath, 'smime', '-verify', '-inform', 'DER', '-noverify', '-out', $this->destination ];
         return new Process($options);
     }
 
